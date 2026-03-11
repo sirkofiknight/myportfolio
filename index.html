@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RICHARD OSEI ADU | Developer Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neutral-stone': '#EAE9E4',
+                        'dark-primary': '#1A1A1A',
+                        'accent-orange': '#FF5F1F',
+                        'accent-blue': '#0000FF',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/css">
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #EAE9E4;
+            color: #1A1A1A;
+            cursor: none;
+            overflow-x: hidden;
+        }
+
+        .swiss-border {
+            border-bottom: 1px solid #1A1A1A;
+        }
+
+        .swiss-border-t {
+            border-top: 1px solid #1A1A1A;
+        }
+
+        .swiss-border-l {
+            border-left: 1px solid #1A1A1A;
+        }
+
+        .swiss-border-r {
+            border-right: 1px solid #1A1A1A;
+        }
+
+        /* Scanline Overlay */
+        #scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+            background: 
+                linear-gradient(rgba(26, 26, 26, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26, 26, 26, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Custom Cursor */
+        #cursor-follower {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1px solid #1A1A1A;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s;
+            mix-blend-mode: exclusion;
+            background: white;
+        }
+
+        .project-item:hover .project-description {
+            max-height: 200px;
+            opacity: 1;
+            margin-top: 0.5rem;
+        }
+
+        .project-description {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hover-accent:hover {
+            color: #FF5F1F;
+        }
+
+        @media (max-width: 768px) {
+            #cursor-follower {
+                display: none;
+            }
+            body {
+                cursor: auto;
+            }
+        }
+
+        /* Nav Visibility Fixes */
+        @media (min-width: 768px) {
+            .nav-link-item {
+                color: #1A1A1A !important;
+                font-weight: 700;
+            }
+        }
+        
+        #nav-menu.active {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+            transform: translateY(0) !important;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+    <div id="scanline"></div>
+    <div id="cursor-follower"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-[1000] px-6 py-6 pointer-events-none">
+        <div class="max-w-7xl mx-auto flex justify-between items-start pointer-events-auto">
+            <div class="hidden md:block font-mono text-[10px] uppercase bg-dark-primary text-neutral-stone px-3 py-2">
+                Currently Available For Collaboration
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-3 bg-dark-primary text-neutral-stone pointer-events-auto">
+                <span class="w-6 h-0.5 bg-current"></span>
+                <span class="w-6 h-0.5 bg-current"></span>
+                <span class="w-6 h-0.5 bg-current"></span>
+            </button>
+
+            <!-- Menu Container -->
+            <div id="nav-menu" class="fixed inset-0 md:relative md:inset-auto bg-dark-primary md:bg-transparent flex flex-col md:flex-row items-center md:items-end justify-center md:justify-start gap-12 md:gap-6 font-mono text-2xl md:text-[11px] uppercase tracking-widest transition-all duration-300 opacity-0 pointer-events-none translate-y-8 md:translate-y-0 md:opacity-100 md:pointer-events-auto">
+                <a href="#stack" class="nav-link-item text-neutral-stone md:text-dark-primary hover:text-accent-orange transition-colors">01. Stack</a>
+                <a href="#ledger" class="nav-link-item text-neutral-stone md:text-dark-primary hover:text-accent-orange transition-colors">02. Ledger</a>
+                <a href="#research" class="nav-link-item text-neutral-stone md:text-dark-primary hover:text-accent-orange transition-colors">03. Research</a>
+                <a href="#contact" class="nav-link-item text-neutral-stone md:text-dark-primary hover:text-accent-orange transition-colors">04. Contact</a>
+                
+                <!-- Mobile Exit -->
+                <button id="menu-close" class="md:hidden mt-12 text-neutral-stone underline text-sm">Close [/]</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 py-12 lg:py-20">
+        <!-- Header -->
+        <header class="mb-20">
+            <h1 class="text-[clamp(3rem,15vw,12rem)] font-black leading-[0.85] tracking-tighter uppercase">
+                Richard<br>Osei Adu
+            </h1>
+        </header>
+
+        <!-- The Stack Registry -->
+        <section id="stack" class="mb-20">
+            <h2 class="font-mono text-sm uppercase mb-6 border-b border-dark-primary pb-2 inline-block">Stack Registry</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-0 swiss-border-t">
+                <div class="swiss-border p-4 md:p-6 flex justify-between items-start">
+                    <span class="font-mono text-xs text-neutral-500">CATEGORY [01]</span>
+                    <div class="text-right">
+                        <span class="font-bold block uppercase">AI Specialization</span>
+                        <span class="font-mono text-sm">Explainable AI (XAI), Machine Learning</span>
+                    </div>
+                </div>
+                <div class="swiss-border md:swiss-border-l p-4 md:p-6 flex justify-between items-start">
+                    <span class="font-mono text-xs text-neutral-500">CATEGORY [02]</span>
+                    <div class="text-right">
+                        <span class="font-bold block uppercase">Core Development</span>
+                        <span class="font-mono text-sm">Python, PHP, JavaScript</span>
+                    </div>
+                </div>
+                <div class="swiss-border p-4 md:p-6 flex justify-between items-start">
+                    <span class="font-mono text-xs text-neutral-500">CATEGORY [03]</span>
+                    <div class="text-right">
+                        <span class="font-bold block uppercase">Web Infrastructure</span>
+                        <span class="font-mono text-sm">Tailwind CSS, HTML5, Backend Architecture</span>
+                    </div>
+                </div>
+                <div class="swiss-border md:swiss-border-l p-4 md:p-6 flex justify-between items-start">
+                    <span class="font-mono text-xs text-neutral-500">CATEGORY [04]</span>
+                    <div class="text-right">
+                        <span class="font-bold block uppercase">Management Systems</span>
+                        <span class="font-mono text-sm">Enterprise Solutions, Custom ERPs</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Ledger -->
+        <section id="ledger" class="mb-20">
+            <h2 class="font-mono text-sm uppercase mb-6 border-b border-dark-primary pb-2 inline-block">Project Ledger</h2>
+            <div class="flex flex-col">
+                <!-- Org Project 1 -->
+                <div class="project-item swiss-border py-4 group cursor-pointer">
+                    <div class="flex items-baseline justify-between">
+                        <div class="flex items-baseline gap-6">
+                            <span class="font-mono text-sm text-neutral-500">01</span>
+                            <span class="text-xl md:text-3xl font-bold uppercase transition-colors hover:text-accent-orange">HIV/TB CSS (CHAG)</span>
+                        </div>
+                        <span class="hidden md:block font-mono text-sm uppercase opacity-0 group-hover:opacity-100 transition-opacity">Details [+]</span>
+                    </div>
+                    <div class="project-description font-mono text-xs max-w-2xl px-12">
+                        <span class="text-accent-orange block mb-1">ROLE: DATA MANAGER & IT SOLUTIONS</span>
+                        Managed health informatics systems for community-based health associations, focusing on data integrity and specialized software solutions for HIV/TB outreach.
+                    </div>
+                </div>
+
+                <!-- Org Project 2 -->
+                <div class="project-item swiss-border py-4 group cursor-pointer">
+                    <div class="flex items-baseline justify-between">
+                        <div class="flex items-baseline gap-6">
+                            <span class="font-mono text-sm text-neutral-500">02</span>
+                            <span class="text-xl md:text-3xl font-bold uppercase transition-colors hover:text-accent-orange">Atwima Mponua Bank</span>
+                        </div>
+                        <span class="hidden md:block font-mono text-sm uppercase opacity-0 group-hover:opacity-100 transition-opacity">Details [+]</span>
+                    </div>
+                    <div class="project-description font-mono text-xs max-w-2xl px-12">
+                        <span class="text-accent-orange block mb-1">ROLE: IT SOLUTIONS</span>
+                        Developing and maintaining management systems for internal bank affairs, streamlining workflow and securing financial data management. (See atwimamponuarb.com)
+                    </div>
+                </div>
+
+                <!-- Org Project 3 -->
+                <div class="project-item swiss-border py-4 group cursor-pointer">
+                    <div class="flex items-baseline justify-between">
+                        <div class="flex items-baseline gap-6">
+                            <span class="font-mono text-sm text-neutral-500">03</span>
+                            <span class="text-xl md:text-3xl font-bold uppercase transition-colors hover:text-accent-orange">Cloudbridge Robotics</span>
+                        </div>
+                        <span class="hidden md:block font-mono text-sm uppercase opacity-0 group-hover:opacity-100 transition-opacity">Details [+]</span>
+                    </div>
+                    <div class="project-description font-mono text-xs max-w-2xl px-12">
+                        <span class="text-accent-orange block mb-1">ROLE: ROBOTICS & AUTOMATION INSTRUCTOR</span>
+                        Lead instructor for the summer school bootcamp, teaching foundations of robotics, automation logic, and hardware-software integration.
+                    </div>
+                </div>
+
+                <!-- Org Project 4 -->
+                <div class="project-item swiss-border py-4 group cursor-pointer">
+                    <div class="flex items-baseline justify-between">
+                        <div class="flex items-baseline gap-6">
+                            <span class="font-mono text-sm text-neutral-500">04</span>
+                            <span class="text-xl md:text-3xl font-bold uppercase transition-colors hover:text-accent-orange">Awiebo College of Education</span>
+                        </div>
+                        <span class="hidden md:block font-mono text-sm uppercase opacity-0 group-hover:opacity-100 transition-opacity">Details [+]</span>
+                    </div>
+                    <div class="project-description font-mono text-xs max-w-2xl px-12">
+                        <span class="text-accent-orange block mb-1">ROLE: SYSTEM DESIGN & IT SOLUTIONS</span>
+                        Architected institutional systems for educational management and campus-wide resource optimization. (See awiecoe.edu.gh)
+                    </div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="project-item swiss-border py-4 group cursor-pointer">
+                    <div class="flex items-baseline justify-between">
+                        <div class="flex items-baseline gap-6">
+                            <span class="font-mono text-sm text-neutral-500">05</span>
+                            <span class="text-xl md:text-3xl font-bold uppercase transition-colors hover:text-accent-orange">Church Teens Management System</span>
+                        </div>
+                        <span class="hidden md:block font-mono text-sm uppercase opacity-0 group-hover:opacity-100 transition-opacity">Details [+]</span>
+                    </div>
+                    <div class="project-description font-mono text-xs max-w-2xl px-12">
+                        <span class="text-accent-orange block mb-1">ROLE: SAAS SOLUTION ARCHITECT</span>
+                        A dedicated Software as a Service solution for church youth management, handling attendance, engagement tracking, and resource sharing.
+                    </div>
+                </div>
+
+                <div class="py-12 flex items-center gap-4">
+                     <span class="font-mono text-[10px] uppercase text-neutral-400">Live Deployments [/]</span>
+                     <div class="flex-1 h-[1px] bg-neutral-200"></div>
+                </div>
+
+                <!-- Live Project 1 -->
+                <div class="project-item swiss-border py-4 group cursor-pointer">
+                    <div class="flex items-baseline justify-between">
+                        <div class="flex items-baseline gap-6">
+                            <span class="font-mono text-sm text-neutral-500">06</span>
+                            <a href="https://awiecoe.edu.gh" target="_blank" class="text-xl md:text-3xl font-bold uppercase transition-colors hover:text-accent-orange">awiecoe.edu.gh</a>
+                        </div>
+                        <span class="hidden md:block font-mono text-sm uppercase opacity-0 group-hover:opacity-100 transition-opacity">Details [+]</span>
+                    </div>
+                    <div class="project-description font-mono text-xs max-w-2xl px-12">
+                        Institutional web platform for education management and community outreach. Built with scalable architecture.
+                    </div>
+                </div>
+
+                <!-- Live Project 2 -->
+                <div class="project-item swiss-border py-4 group cursor-pointer">
+                    <div class="flex items-baseline justify-between">
+                        <div class="flex items-baseline gap-6">
+                            <span class="font-mono text-sm text-neutral-500">07</span>
+                            <a href="https://atwimamponuarb.com" target="_blank" class="text-xl md:text-3xl font-bold uppercase transition-colors hover:text-accent-orange">atwimamponuarb.com</a>
+                        </div>
+                        <span class="hidden md:block font-mono text-sm uppercase opacity-0 group-hover:opacity-100 transition-opacity">Details [+]</span>
+                    </div>
+                    <div class="project-description font-mono text-xs max-w-2xl px-12">
+                        Digital banking portal for Rural Bank operations, prioritizing security and user accessibility.
+                    </div>
+                </div>
+
+                <!-- Live Project 3 -->
+                <div class="project-item swiss-border py-4 group cursor-pointer">
+                    <div class="flex items-baseline justify-between">
+                        <div class="flex items-baseline gap-6">
+                            <span class="font-mono text-sm text-neutral-500">08</span>
+                            <span class="text-xl md:text-3xl font-bold uppercase transition-colors hover:text-accent-orange">AMRB INVENTORY SYSTEM</span>
+                        </div>
+                        <span class="hidden md:block font-mono text-sm uppercase opacity-0 group-hover:opacity-100 transition-opacity">Details [+]</span>
+                    </div>
+                    <div class="project-description font-mono text-xs max-w-2xl px-12">
+                         Advanced inventory control and stock management solution designed for Rural Bank operations.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research Registry -->
+        <section id="research" class="mb-20">
+            <h2 class="font-mono text-sm uppercase mb-6 border-b border-dark-primary pb-2 inline-block">Research Registry</h2>
+            <div class="flex flex-col">
+                <!-- Publication 1 -->
+                <div class="swiss-border py-8 group cursor-default">
+                    <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+                        <div class="flex items-baseline gap-6">
+                            <span class="font-mono text-sm text-neutral-500">PUB [01]</span>
+                            <div class="flex flex-col">
+                                <span class="font-mono text-xs uppercase text-accent-orange mb-2">Published / IJCA</span>
+                                <a href="https://doi.org/10.5120/IJCA2024924177" target="_blank" class="text-xl md:text-2xl font-bold uppercase transition-colors hover:text-accent-blue leading-tight">
+                                    Impact of Explainable Artificial Intelligence on Decision-Making in Financial Services
+                                </a>
+                            </div>
+                        </div>
+                        <span class="font-mono text-[10px] uppercase text-neutral-400">2024 / Vol 185</span>
+                    </div>
+                </div>
+
+                <!-- Publication 2 -->
+                <div class="swiss-border py-8 group cursor-default">
+                    <div class="flex flex-col md:flex-row md:items-baseline justify-between gap-4">
+                        <div class="flex items-baseline gap-6">
+                            <span class="font-mono text-sm text-neutral-500">PUB [02]</span>
+                            <div class="flex flex-col">
+                                <span class="font-mono text-xs uppercase text-neutral-400 mb-2">Pending Publication</span>
+                                <h3 class="text-xl md:text-2xl font-bold uppercase leading-tight">
+                                    A Dynamic Hybrid Explainable AI Framework for Transformer-Based Text Summarization: Integrating Attention Mechanisms, SHAP Analysis, and Perturbation Methods
+                                </h3>
+                            </div>
+                        </div>
+                        <span class="font-mono text-[10px] uppercase text-neutral-400">STATUS: IN REVIEW</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Repositories & Contact -->
+        <section id="contact" class="grid grid-cols-1 md:grid-cols-2 gap-8 font-mono text-sm">
+            <div class="swiss-border-t pt-6">
+                <h2 class="font-mono text-xs uppercase mb-6 text-neutral-500">[ REPOSITORIES ]</h2>
+                <div class="flex flex-col gap-6">
+                    <div>
+                        <h3 class="uppercase text-neutral-400 mb-1 font-mono text-[10px]">GitHub</h3>
+                        <a href="https://github.com/sirkofiknight" target="_blank" class="text-xl font-bold hover:text-accent-blue transition-colors">@sirkofiknight</a>
+                    </div>
+                    <div>
+                        <h3 class="uppercase text-neutral-400 mb-1 font-mono text-[10px]">Hugging Face</h3>
+                        <a href="https://huggingface.co/fiiriche" target="_blank" class="text-xl font-bold hover:text-accent-blue transition-colors">@fiiriche</a>
+                    </div>
+                </div>
+            </div>
+            <div class="swiss-border-t pt-6 md:swiss-border-l md:pl-12">
+                <h2 class="font-mono text-xs uppercase mb-6 text-neutral-500">[ CONTACT REGISTRY ]</h2>
+                <div class="flex flex-col gap-6">
+                    <div>
+                        <h3 class="uppercase text-neutral-400 mb-1 font-mono text-[10px]">Email</h3>
+                        <a href="mailto:richardoseiadu1@gmail.com" class="text-xl font-bold hover:text-accent-orange transition-colors lowercase">richardoseiadu1@gmail.com</a>
+                    </div>
+                    <div>
+                        <h3 class="uppercase text-neutral-400 mb-1 font-mono text-[10px]">Phone</h3>
+                        <a href="tel:0546787864" class="text-xl font-bold hover:text-accent-orange transition-colors">0546787864</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-20 pt-8 swiss-border-t font-mono text-[10px] text-neutral-500 uppercase flex flex-col md:flex-row justify-between gap-4">
+            <div class="flex gap-8">
+                <span>© 2026 Richard Osei Adu</span>
+                <span>All Rights Reserved</span>
+            </div>
+            <div class="flex gap-8">
+                <span>Swiss Minimalist</span>
+                <span>Typeface: Inter / JetBrains Mono</span>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        const cursor = document.getElementById('cursor-follower');
+        const scanline = document.getElementById('scanline');
+
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            cursor.style.left = `${x}px`;
+            cursor.style.top = `${y}px`;
+            
+            // Subtly shift the grid
+            scanline.style.backgroundPosition = `${x / 20}px ${y / 20}px`;
+        });
+
+        // Hover effects for the cursor
+        const interactables = document.querySelectorAll('a, .project-item, button, #menu-toggle');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.width = '100px';
+                cursor.style.height = '100px';
+                cursor.style.backgroundColor = 'rgba(255, 95, 31, 0.1)';
+                cursor.style.borderColor = '#FF5F1F';
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.style.width = '40px';
+                cursor.style.height = '40px';
+                cursor.style.backgroundColor = 'white';
+                cursor.style.borderColor = '#1A1A1A';
+            });
+        });
+
+        // Mobile Menu Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuClose = document.getElementById('menu-close');
+        const navMenu = document.getElementById('nav-menu');
+        const navLinks = document.querySelectorAll('.nav-link-item');
+
+        const toggleMenu = (show) => {
+            if (show) {
+                navMenu.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                navMenu.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        };
+
+        menuToggle.addEventListener('click', () => toggleMenu(true));
+        menuClose.addEventListener('click', () => toggleMenu(false));
+        navLinks.forEach(link => link.addEventListener('click', () => toggleMenu(false)));
+    </script>
+</body>
+</html>
